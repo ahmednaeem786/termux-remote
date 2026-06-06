@@ -33,7 +33,7 @@ def discover_phone():
 
         # Parsing the JSON response to extract the IP address nested within
         ip = data['with'][0]['content']['ip']
-        print(f"[OK] Found phone automatically at: {ip}")
+        print(f"Found phone automatically at: {ip}")
         return ip
     except Exception as e:
         print("!! Could not find phone. Is the Termux server running?")
@@ -45,15 +45,27 @@ def change_vol(direction):
     on the phone to adjust the media volume accordingly.
     """
     global last_pressed, PHONE_IP
-    if not PHONE_IP: return
-    
-    # Ignores key presses that are faster than the cooldown limit
-    if (time.time() - last_pressed) < COOLDOWN:
-        return
+
+    if not PHONE_IP or ((time.time() - last_pressed) < COOLDOWN): return
     last_pressed = time.time()
     
     try:
         requests.get(f"http://{PHONE_IP}:5000/vol/{direction}", timeout=1)
+    except:
+        print("Connection error. Did the IP change?")
+
+def control_media(action):
+    """
+    Sends a HTTP request to control the media playback i.e. (next/previous track).
+    Uses a slighly longer cooldown to prevent double-skipping tracks.
+    """
+    global last_pressed, PHONE_IP
+
+    if not PHONE_IP or (time.time() - last_pressed) < 0.4: return
+    last_pressed = time.time()
+    
+    try:
+        requests.get(f"http://{PHONE_IP}:5000/media/{action}", timeout=1)
     except:
         print("Connection error. Did the IP change?")
 
@@ -65,6 +77,9 @@ if PHONE_IP:
     # Mapping keyboard hotkeys to adjust the volume accordingly
     keyboard.add_hotkey('alt+up', lambda: change_vol('up'))
     keyboard.add_hotkey('alt+down', lambda: change_vol('down'))
+
+    keyboard.add_hotkey('alt+right', lambda: control_media('next'))
+    keyboard.add_hotkey('alt+left', lambda: control_media('prev'))
 
     print("\n--- Phone Volume Controller Active ---")
     print("Hotkeys: ALT + UP / ALT + DOWN")
