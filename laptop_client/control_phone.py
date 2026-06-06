@@ -46,11 +46,14 @@ def change_vol(direction):
     """
     global last_pressed, PHONE_IP
 
-    if not PHONE_IP or ((time.time() - last_pressed) < COOLDOWN): return
+    if not PHONE_IP or ((time.time() - last_pressed) < COOLDOWN): 
+        return
     last_pressed = time.time()
     
+    command = "raise" if direction == "up" else "lower"
+
     try:
-        requests.get(f"http://{PHONE_IP}:5000/vol/{direction}", timeout=1)
+        requests.get(f"http://{PHONE_IP}:5000/action/{command}", timeout=1)
     except:
         print("Connection error. Did the IP change?")
 
@@ -61,11 +64,14 @@ def control_media(action):
     """
     global last_pressed, PHONE_IP
 
-    if not PHONE_IP or (time.time() - last_pressed) < 0.4: return
+    if not PHONE_IP or (time.time() - last_pressed) < 0.4:
+        return
     last_pressed = time.time()
+
+    command = "previous" if action == "prev" else action
     
     try:
-        requests.get(f"http://{PHONE_IP}:5000/media/{action}", timeout=1)
+        requests.get(f"http://{PHONE_IP}:5000/action/{command}", timeout=1)
     except:
         print("Connection error. Did the IP change?")
 
@@ -80,6 +86,8 @@ if PHONE_IP:
 
     keyboard.add_hotkey('alt+right', lambda: control_media('next'))
     keyboard.add_hotkey('alt+left', lambda: control_media('prev'))
+
+    keyboard.add_hotkey('alt+space', lambda: control_media('play-pause'))
 
     print("\n--- Phone Volume Controller Active ---")
     print("Hotkeys: ALT + UP / ALT + DOWN")

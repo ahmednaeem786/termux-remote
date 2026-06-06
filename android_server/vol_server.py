@@ -50,20 +50,27 @@ def publish_ip():
     except:
         print("\n[-] Failed to register IP. Check network connection.")
 
-@app.route('/vol/<action>')
-def volume(action):
+@app.route('/action/<command>')
+def execute_action(command):
     """
-    The main API endpoint. Listens for HTTP GET requests from the laptop.
-    Translates the URL path into native Android shell commands to adjust volume.
+    A dynamic, universal endpoint. It checks the incoming command against 
+    a list of allowed actions and routes it to the correct Android system call.
     """
-    # Map the URL string ('up' or 'down') to the Android system argument
-    direction = "raise" if action == "up" else "lower"
-    
-    # Execute the command directly in the Android OS via Termux shell
-    os.system(f"cmd media_session volume --show --adj {direction}")
-    
-    # Return an HTTP 200 OK response to the laptop
-    return f"Volume adjusted: {direction}", 200
+    # Define all the commands Android's media_session natively supports
+    media_dispatch_keys = ["next", "previous", "play", "pause", "play-pause", "stop", "mute"]
+    volume_keys = ["raise", "lower", "same"]
+
+    # Route the command to the correct OS execution
+    if command in media_dispatch_keys:
+        os.system(f"cmd media_session dispatch {command}")
+        return f"Dispatched media key: {command}", 200
+        
+    elif command in volume_keys:
+        os.system(f"cmd media_session volume --show --adj {command}")
+        return f"Adjusted volume: {command}", 200
+        
+    # Security/Fallback: Ignore anything that isn't explicitly allowed above
+    return "Invalid command", 400
 
 # --- Main Execution Flow ---
 if __name__ == '__main__':
