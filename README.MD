@@ -110,8 +110,6 @@ Once both scripts are running, use these global hotkeys on your laptop:
 - `ALT + LEFT` → previous track
 - `ALT + SPACE` → play/pause toggle
 
-> Note: The current laptop script maps play/pause to `ALT + SPACE`.
-
 ---
 
 ## 🔒 Security
