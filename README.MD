@@ -9,6 +9,7 @@ Set up a tiny Flask server on your phone and a background listener on your PC. Y
 <p align="center">
   <img src="assets/demo.gif" width="100%">
 </p>
+
 ---
 
 ## 🚀 What It Does
