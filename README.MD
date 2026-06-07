@@ -5,6 +5,10 @@ A lightweight Python setup to control your Android phone from your laptop using 
 Set up a tiny Flask server on your phone and a background listener on your PC. Your laptop discovers the phone automatically via `dweet.cc`, then sends secure media commands over Wi-Fi.
 
 ---
+<p align="center">
+  <video src="assets\Demo Video.mp4" width="100%" controls autoplay loop muted></video>
+</p>
+---
 
 ## 🚀 What It Does
 
