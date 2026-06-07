@@ -6,7 +6,7 @@ Set up a tiny Flask server on your phone and a background listener on your PC. Y
 
 ---
 <p align="center">
-  <video src="assets\Demo Video.mp4" width="100%" controls autoplay loop muted></video>
+  <video src="assets/Demo%20Video.mp4" width="100%" controls autoplay loop muted playsinline></video>
 </p>
 ---
 
